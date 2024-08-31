@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        AZURE_CREDENTIALS = credentials('e4a472a1-9fcd-4f52-9c12-01fce460c91a')
+        AZURE_CREDENTIALS_ID = 'e4a472a1-9fcd-4f52-9c12-01fce460c91a'
     }
 
     stages {
@@ -14,11 +14,25 @@ pipeline {
 
         stage('Terraform Init and Apply') {
             steps {
-                script {
-                    sh '''
-                    terraform init
-                    terraform apply -auto-approve
-                    '''
+                withCredentials([[
+                    $class: 'AzureServicePrincipal', 
+                    credentialsId: "${env.AZURE_CREDENTIALS_ID}", 
+                    clientIdVariable: 'ARM_CLIENT_ID', 
+                    clientSecretVariable: 'ARM_CLIENT_SECRET', 
+                    tenantIdVariable: 'ARM_TENANT_ID', 
+                    subscriptionIdVariable: 'ARM_SUBSCRIPTION_ID'
+                ]]) {
+                    script {
+                        sh '''
+                        terraform init
+                        terraform apply \
+                            -var "subscription_id=${ARM_SUBSCRIPTION_ID}" \
+                            -var "client_id=${ARM_CLIENT_ID}" \
+                            -var "client_secret=${ARM_CLIENT_SECRET}" \
+                            -var "tenant_id=${ARM_TENANT_ID}" \
+                            -auto-approve
+                        '''
+                    }
                 }
             }
         }

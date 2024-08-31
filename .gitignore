@@ -36,3 +36,4 @@ anleitung.md
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+Jenkinsfile
