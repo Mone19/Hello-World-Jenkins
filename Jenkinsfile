@@ -2,10 +2,7 @@ pipeline {
     agent any
 
     environment {
-        ARM_CLIENT_ID = credentials('azure-client-id-credentials-id')
-        ARM_CLIENT_SECRET = credentials('azure-client-secret-credentials-id')
-        ARM_TENANT_ID = credentials('azure-tenant-id-credentials-id')
-        ARM_SUBSCRIPTION_ID = credentials('azure-subscription-id-credentials-id')
+        AZURE_CREDENTIALS = credentials('e4a472a1-9fcd-4f52-9c12-01fce460c91a')
     }
 
     stages {
@@ -44,4 +41,3 @@ pipeline {
         }
     }
 }
-
