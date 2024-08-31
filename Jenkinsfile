@@ -14,14 +14,11 @@ pipeline {
 
         stage('Terraform Init and Apply') {
             steps {
-                withCredentials([[
-                    $class: 'AzureServicePrincipal', 
-                    credentialsId: "${env.AZURE_CREDENTIALS_ID}", 
-                    clientIdVariable: 'ARM_CLIENT_ID', 
-                    clientSecretVariable: 'ARM_CLIENT_SECRET', 
-                    tenantIdVariable: 'ARM_TENANT_ID', 
-                    subscriptionIdVariable: 'ARM_SUBSCRIPTION_ID'
-                ]]) {
+                withCredentials([azureServicePrincipal(credentialsId: "${env.AZURE_CREDENTIALS_ID}", 
+                                                       clientIdVariable: 'ARM_CLIENT_ID', 
+                                                       clientSecretVariable: 'ARM_CLIENT_SECRET', 
+                                                       tenantIdVariable: 'ARM_TENANT_ID', 
+                                                       subscriptionIdVariable: 'ARM_SUBSCRIPTION_ID')]) {
                     script {
                         sh '''
                         terraform init
