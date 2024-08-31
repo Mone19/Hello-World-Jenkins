@@ -1,0 +1,46 @@
+# Node modules (wenn du ein Node.js-Projekt hast)
+node_modules/
+
+# Log-Dateien
+*.log
+
+# Betriebssystem- oder Editor-spezifische Dateien
+.DS_Store
+Thumbs.db
+
+# Temporäre Build-Dateien und Verzeichnisse
+build/
+dist/
+tmp/
+temp/
+
+# Docker-Dateien (wenn du lokale Docker-Volumen oder Caches verwendest)
+.docker/
+docker-compose.override.yml
+
+# Konfigurationsdateien für lokale Entwicklungsumgebungen
+.vscode/
+.idea/
+
+# Verzeichnisse von Container-Tools
+docker-compose.override.yml
+
+# Jenkins spezifische Konfigurationsdateien
+jenkins_home/
+*.jenkins/
+
+# Azure und Kubernetes spezifische Dateien (sensible Daten oder Konfigurationen)
+*.kube/
+*.azure/
+
+# Erstellte Container und Images (wenn lokal verwaltet)
+*.tar
+*.img
+
+# Sensible Daten und private Schlüssel
+*.pem
+*.key
+*.crt
+
+# Lokale Umgebungsdateien
+.env
