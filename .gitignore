@@ -1,46 +1,38 @@
-# Node modules (wenn du ein Node.js-Projekt hast)
-node_modules/
+# Local .terraform directories
+**/.terraform/*
 
-# Log-Dateien
-*.log
+# .tfstate files
+*.tfstate
+*.tfstate.*
 
-# Betriebssystem- oder Editor-spezifische Dateien
-.DS_Store
-Thumbs.db
+# Crash log files
+crash.log
+crash.*.log
 
-# Temporäre Build-Dateien und Verzeichnisse
-build/
-dist/
-tmp/
-temp/
+# Exclude all .tfvars files, which are likely to contain sensitive data, such as
+# password, private keys, and other secrets. These should not be part of version 
+# control as they are data points which are potentially sensitive and subject 
+# to change depending on the environment.
+*.tfvars
+*.tfvars.json
 
-# Docker-Dateien (wenn du lokale Docker-Volumen oder Caches verwendest)
-.docker/
-docker-compose.override.yml
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+anleitung.md
 
-# Konfigurationsdateien für lokale Entwicklungsumgebungen
-.vscode/
-.idea/
+# Ignore transient lock info files created by terraform apply
+.terraform.tfstate.lock.info
 
-# Verzeichnisse von Container-Tools
-docker-compose.override.yml
+# Include override files you do wish to add to version control using negated pattern
+# !example_override.tf
 
-# Jenkins spezifische Konfigurationsdateien
-jenkins_home/
-*.jenkins/
+# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+# example: *tfplan*
 
-# Azure und Kubernetes spezifische Dateien (sensible Daten oder Konfigurationen)
-*.kube/
-*.azure/
-
-# Erstellte Container und Images (wenn lokal verwaltet)
-*.tar
-*.img
-
-# Sensible Daten und private Schlüssel
-*.pem
-*.key
-*.crt
-
-# Lokale Umgebungsdateien
-.env
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
