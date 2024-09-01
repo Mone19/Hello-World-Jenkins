@@ -11,6 +11,7 @@ provider "kubernetes" {
 }
 
 resource "kubernetes_secret" "tls_cert" {
+  depends_on = [ azurerm_kubernetes_cluster.aks ]
   metadata {
     name      = "tls-secret"
     namespace = "default"
@@ -119,7 +120,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   provisioner "local-exec" {
     command = "sleep 120"
   }
-  
+
 
   depends_on = [
     azurerm_virtual_network.vnet,
