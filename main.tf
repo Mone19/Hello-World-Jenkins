@@ -133,6 +133,11 @@ resource "null_resource" "wait_for_aks" {
   depends_on = [null_resource.wait_for_dns]
 }
 
+# Dummy resource to enforce dependency
+resource "null_resource" "dummy_kubernetes_dependency" {
+  depends_on = [null_resource.wait_for_aks]
+}
+
 provider "kubernetes" {
   host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
   client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate)
@@ -141,7 +146,8 @@ provider "kubernetes" {
 }
 
 resource "kubernetes_secret" "tls_cert" {
-  depends_on = [ null_resource.wait_for_aks ]
+  depends_on = [null_resource.dummy_kubernetes_dependency]
+
   metadata {
     name      = "tls-secret"
     namespace = "default"
