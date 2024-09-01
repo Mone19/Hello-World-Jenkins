@@ -73,6 +73,96 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_assoc" 
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+resource "kubernetes_namespace" "ingress_nginx" {
+  metadata {
+    name = "ingress-nginx"
+  }
+}
+
+resource "kubernetes_deployment" "nginx_ingress" {
+  metadata {
+    name      = "nginx-ingress-controller"
+    namespace = kubernetes_namespace.ingress_nginx.metadata[0].name
+  }
+
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "nginx-ingress"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "nginx-ingress"
+        }
+      }
+
+      spec {
+        container {
+          name  = "nginx-ingress-controller"
+          image = "k8s.gcr.io/ingress-nginx/controller:v1.2.1"
+
+          args = [
+            "/nginx-ingress-controller",
+            "--configmap=$(POD_NAMESPACE)/nginx-configuration",
+            "--tcp-services-configmap=$(POD_NAMESPACE)/tcp-services",
+            "--udp-services-configmap=$(POD_NAMESPACE)/udp-services",
+            "--publish-service=$(POD_NAMESPACE)/nginx-ingress",
+          ]
+
+          env {
+            name = "POD_NAMESPACE"
+            value_from {
+              field_ref {
+                field_path = "metadata.namespace"
+              }
+            }
+          }
+
+          port {
+            name           = "http"
+            container_port = 80
+          }
+
+          port {
+            name           = "https"
+            container_port = 443
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "nginx_ingress" {
+  metadata {
+    name      = "nginx-ingress"
+    namespace = kubernetes_namespace.ingress_nginx.metadata[0].name
+  }
+
+  spec {
+    selector = {
+      app = "nginx-ingress"
+    }
+
+    type = "LoadBalancer"
+
+    port {
+      port        = 80
+      target_port = 80
+    }
+
+    port {
+      port        = 443
+      target_port = 443
+    }
+  }
+}
+
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "${random_pet.resource_name.id}-aks"
   location            = azurerm_resource_group.rg.location

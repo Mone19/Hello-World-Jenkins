@@ -8,7 +8,7 @@ metadata:
 
 spec:
   rules:
-  - host: hello-world.example.com
+  - host: hello-world.com
     http:
       paths:
       - path: /
@@ -19,4 +19,4 @@ spec:
             port:
               number: 80
   tls:
-    secretName: hello-world-tls
+    secretName: tls-secret
