@@ -230,6 +230,7 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
 }
 
+
 resource "kubernetes_secret" "tls_cert" {
   depends_on = [ null_resource.wait_for_aks ]
   metadata {
