@@ -31,5 +31,3 @@ spec:
       - name: html
         configMap:
           name: hello-world-config
-
-
