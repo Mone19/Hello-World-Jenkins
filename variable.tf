@@ -17,3 +17,14 @@ variable "tenant_id" {
   description = "The Azure Tenant ID"
   type        = string
 }
+
+variable "tls_cert" {
+  description = "The TLS certificate"
+  type        = string
+}
+
+variable "tls_key" {
+  description = "The TLS private key"
+  type        = string
+}
+

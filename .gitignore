@@ -37,3 +37,5 @@ anleitung.md
 .terraformrc
 terraform.rc
 Jenkinsfile
+aks-ingress-tls.crt
+aks-ingress-tls.key

@@ -8,6 +8,23 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
+# TLS-Zertifikat
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
+
+resource "kubernetes_secret" "tls_cert" {
+  metadata {
+    name      = "hello-world-tls"
+    namespace = "default"
+  }
+
+  data = {
+    tls.crt = base64decode(var.tls_cert)
+    tls.key = base64decode(var.tls_key)
+  }
+}
+
 # Random Name
 resource "random_pet" "resource_name" {
   length = 2
