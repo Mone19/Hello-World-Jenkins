@@ -116,6 +116,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
     Environment = "Production"
   }
 
+  provisioner "local-exec" {
+    command = "sleep 120"
+  }
+  
+
   depends_on = [
     azurerm_virtual_network.vnet,
     azurerm_subnet.subnet
