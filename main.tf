@@ -133,7 +133,13 @@ resource "null_resource" "wait_for_aks" {
   depends_on = [null_resource.wait_for_dns]
 }
 
-resource "null_resource" "dummy_kubernetes_dependency" {
+resource "null_resource" "wait_for_aks_ready" {
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Waiting an additional 5 minutes for AKS to be fully ready..."
+      sleep 300
+    EOT
+  }
   depends_on = [null_resource.wait_for_aks]
 }
 
@@ -145,7 +151,7 @@ provider "kubernetes" {
 }
 
 resource "kubernetes_secret" "tls_cert" {
-  depends_on = [null_resource.dummy_kubernetes_dependency]
+  depends_on = [null_resource.wait_for_aks_ready]
 
   metadata {
     name      = "tls-secret"
