@@ -8,16 +8,21 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
+# Random Name
+resource "random_pet" "resource_name" {
+  length = 2
+  separator = "-"
+}
 
 # Ressourcen-Gruppe
 resource "azurerm_resource_group" "rg" {
-  name     = "rg"
+  name     = "${random_pet.resource_name.id}-rg"
   location = "West US"
 }
 
 # Virtuelles Netzwerk
 resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet"
+  name                = "${random_pet.resource_name.id}-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -25,7 +30,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 # Subnetz für 
 resource "azurerm_subnet" "subnet" {
-  name                 = "subnet"
+  name                 = "${random_pet.resource_name.id}-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.0.0/24"]
@@ -33,7 +38,7 @@ resource "azurerm_subnet" "subnet" {
 
 # Öffentliche IP-Adresse
 resource "azurerm_public_ip" "pip" {
-  name                = "pip"
+  name                = "${random_pet.resource_name.id}-pip"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"
@@ -41,7 +46,7 @@ resource "azurerm_public_ip" "pip" {
 
 # Netzwerkschnittstelle
 resource "azurerm_network_interface" "nic" {
-  name                = "nic"
+  name                = "${random_pet.resource_name.id}-nic"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -55,7 +60,7 @@ resource "azurerm_network_interface" "nic" {
 
 # Netzwerk-Sicherheitsgruppe
 resource "azurerm_network_security_group" "nsg" {
-  name                = "nsg"
+  name                = "${random_pet.resource_name.id}-nsg"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -80,7 +85,7 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_assoc" 
 
 # AKS Cluster
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "aks"
+  name                = "${random_pet.resource_name.id}-aks"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "aks-cluster"
