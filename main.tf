@@ -10,19 +10,6 @@ provider "kubernetes" {
   config_path = "~/.kube/config"
 }
 
-resource "kubernetes_secret" "tls_cert" {
-  depends_on = [ azurerm_kubernetes_cluster.aks ]
-  metadata {
-    name      = "tls-secret"
-    namespace = "default"
-  }
-
-  data = {
-    "tls.crt" = filebase64(var.tls_cert_file)
-    "tls.key" = filebase64(var.tls_key_file)
-  }
-}
-
 resource "random_pet" "resource_name" {
   length    = 2
   separator = "-"
@@ -117,15 +104,36 @@ resource "azurerm_kubernetes_cluster" "aks" {
     Environment = "Production"
   }
 
-  provisioner "local-exec" {
-    command = "sleep 120"
-  }
-
-
   depends_on = [
     azurerm_virtual_network.vnet,
     azurerm_subnet.subnet
   ]
+}
+
+resource "null_resource" "wait_for_aks" {
+  provisioner "local-exec" {
+    command = <<EOT
+      while ! nc -zv ${azurerm_kubernetes_cluster.aks.fqdn} 443; do
+        echo "Waiting for AKS to be available..."
+        sleep 10
+      done
+      echo "AKS is available."
+    EOT
+  }
+  depends_on = [azurerm_kubernetes_cluster.aks]
+}
+
+resource "kubernetes_secret" "tls_cert" {
+  depends_on = [ null_resource.wait_for_aks ]
+  metadata {
+    name      = "tls-secret"
+    namespace = "default"
+  }
+
+  data = {
+    "tls.crt" = filebase64(var.tls_cert_file)
+    "tls.key" = filebase64(var.tls_key_file)
+  }
 }
 
 output "resource_group_name" {
