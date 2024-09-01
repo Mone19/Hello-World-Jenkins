@@ -113,11 +113,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
 resource "null_resource" "wait_for_aks" {
   provisioner "local-exec" {
     command = <<EOT
-      while ! nc -zv ${azurerm_kubernetes_cluster.aks.fqdn} 443; do
+      while ! curl -k ${azurerm_kubernetes_cluster.aks.fqdn}; do
         echo "Waiting for AKS to be available..."
         sleep 10
       done
       echo "AKS is available."
+      sleep 60
     EOT
   }
   depends_on = [azurerm_kubernetes_cluster.aks]
