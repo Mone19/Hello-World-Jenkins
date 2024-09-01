@@ -115,10 +115,10 @@ resource "null_resource" "wait_for_aks" {
     command = <<EOT
       while ! curl -k ${azurerm_kubernetes_cluster.aks.fqdn}; do
         echo "Waiting for AKS to be available..."
-        sleep 10
+        sleep 230
       done
       echo "AKS is available."
-      sleep 60
+      sleep 180
     EOT
   }
   depends_on = [azurerm_kubernetes_cluster.aks]
