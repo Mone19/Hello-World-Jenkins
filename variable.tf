@@ -18,13 +18,10 @@ variable "tenant_id" {
   type        = string
 }
 
-variable "tls_cert" {
-  description = "The TLS certificate"
-  type        = string
+variable "tls_cert_file" {
+  description = "Path to the TLS certificate file"
 }
 
-variable "tls_key" {
-  description = "The TLS private key"
-  type        = string
+variable "tls_key_file" {
+  description = "Path to the TLS key file"
 }
-
