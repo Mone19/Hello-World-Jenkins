@@ -110,18 +110,31 @@ resource "azurerm_kubernetes_cluster" "aks" {
   ]
 }
 
+resource "null_resource" "wait_for_dns" {
+  provisioner "local-exec" {
+    command = <<EOT
+      while ! nslookup ${azurerm_kubernetes_cluster.aks.fqdn}; do
+        echo "Waiting for DNS to propagate..."
+        sleep 60
+      done
+      echo "DNS propagation complete."
+    EOT
+  }
+  depends_on = [azurerm_kubernetes_cluster.aks]
+}
+
 resource "null_resource" "wait_for_aks" {
   provisioner "local-exec" {
     command = <<EOT
-      while ! curl -k ${azurerm_kubernetes_cluster.aks.fqdn}; do
+      while ! curl -k --silent --fail --output /dev/null ${azurerm_kubernetes_cluster.aks.fqdn}; do
         echo "Waiting for AKS to be available..."
-        sleep 230
+        sleep 60
       done
       echo "AKS is available."
       sleep 180
     EOT
   }
-  depends_on = [azurerm_kubernetes_cluster.aks]
+  depends_on = [null_resource.wait_for_dns]
 }
 
 resource "kubernetes_secret" "tls_cert" {
