@@ -6,10 +6,6 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
 resource "random_pet" "resource_name" {
   length    = 2
   separator = "-"
@@ -126,7 +122,7 @@ resource "null_resource" "wait_for_dns" {
 resource "null_resource" "wait_for_aks" {
   provisioner "local-exec" {
     command = <<EOT
-      while ! curl -k --silent --fail --output /dev/null ${azurerm_kubernetes_cluster.aks.fqdn}; do
+      while ! curl -k --silent --fail --output /dev/null https://${azurerm_kubernetes_cluster.aks.fqdn}; do
         echo "Waiting for AKS to be available..."
         sleep 60
       done
@@ -135,6 +131,13 @@ resource "null_resource" "wait_for_aks" {
     EOT
   }
   depends_on = [null_resource.wait_for_dns]
+}
+
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
 }
 
 resource "kubernetes_secret" "tls_cert" {
