@@ -133,7 +133,6 @@ resource "null_resource" "wait_for_aks" {
   depends_on = [null_resource.wait_for_dns]
 }
 
-# Dummy resource to enforce dependency
 resource "null_resource" "dummy_kubernetes_dependency" {
   depends_on = [null_resource.wait_for_aks]
 }
