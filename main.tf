@@ -20,8 +20,8 @@ resource "kubernetes_secret" "tls_cert" {
   }
 
   data = {
-    "tls.crt" = file(var.tls_cert)
-    "tls.key" = file(var.tls_key)
+    "tls.crt" = base64decode(env.TLS_CERT)
+    "tls.key" = base64decode(env.TLS_KEY)
   }
 }
 
