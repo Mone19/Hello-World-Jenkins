@@ -19,6 +19,7 @@ spec:
         image: nginx:alpine
         ports:
         - containerPort: 80
+        - containerPort: 443
         resources:
           requests:
             cpu: "100m"
@@ -30,4 +31,4 @@ spec:
       volumes:
       - name: html
         configMap:
-          name: hello-world-config # configmap name
+          name: hello-world-config
