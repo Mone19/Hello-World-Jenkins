@@ -4,7 +4,6 @@ metadata:
   name: hello-world-ingress
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/secure-protocol: "true"
 spec:
   rules:
   - host: hello-world.example.com
