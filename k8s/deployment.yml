@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world
+  name: hello-world-deployment # in hpa
   labels:
     app: hello-world
 spec:
@@ -30,4 +30,4 @@ spec:
       volumes:
       - name: html
         configMap:
-          name: hello-world-config
+          name: hello-world-config # configmap name

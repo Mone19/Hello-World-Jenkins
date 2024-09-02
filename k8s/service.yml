@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-world-service
+  name: hello-world-service # in ingress
 spec:
   type: LoadBalancer
   ports:

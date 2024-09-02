@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hello-world-config
+  name: hello-world-config # in Deployment
 data:
   index.html: |
     <!DOCTYPE html>
