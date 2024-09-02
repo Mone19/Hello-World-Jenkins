@@ -8,13 +8,13 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
-# Ressourcen-Gruppe
+
 resource "azurerm_resource_group" "rg" {
   name     = "hello-rg"
   location = "West US"
 }
 
-# Virtuelles Netzwerk
+
 resource "azurerm_virtual_network" "vnet" {
   name                = "hello-vnet"
   address_space       = ["10.0.0.0/16"]
@@ -22,7 +22,7 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = azurerm_resource_group.rg.name
 }
 
-# Subnetz für 
+
 resource "azurerm_subnet" "subnet" {
   name                 = "hello-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -30,7 +30,7 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.0.0.0/24"]
 }
 
-# Öffentliche IP-Adresse
+
 resource "azurerm_public_ip" "pip" {
   name                = "hello-pip"
   location            = azurerm_resource_group.rg.location
@@ -38,7 +38,7 @@ resource "azurerm_public_ip" "pip" {
   allocation_method   = "Static"
 }
 
-# Netzwerkschnittstelle
+
 resource "azurerm_network_interface" "nic" {
   name                = "hello-nic"
   location            = azurerm_resource_group.rg.location
@@ -52,7 +52,7 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
-# Netzwerk-Sicherheitsgruppe
+
 resource "azurerm_network_security_group" "nsg" {
   name                = "hello-nsg"
   location            = azurerm_resource_group.rg.location
@@ -71,13 +71,13 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
-# Verknüpfung der NSG mit der Netzwerkschnittstelle
+
 resource "azurerm_network_interface_security_group_association" "nic_nsg_assoc" {
   network_interface_id      = azurerm_network_interface.nic.id
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
-# AKS Cluster
+
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "hello-aks"
   location            = azurerm_resource_group.rg.location
@@ -111,13 +111,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   ]
 }
 
-# AKS Cluster Admin Kubeconfig
+
 data "azurerm_kubernetes_cluster" "aks" {
   name                = azurerm_kubernetes_cluster.aks.name
   resource_group_name = azurerm_resource_group.rg.name
 }
 
-# Output Jenkins Pipline
+
 output "resource_group_name" {
   value = azurerm_resource_group.rg.name
 }
